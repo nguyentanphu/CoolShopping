@@ -25,29 +25,6 @@ namespace CoolShopping.Application
 			{
 				CategoryId = 1,
 				CategoryName = "Shirt",
-				CategoryProperties = new List<CategoryProperty>
-				{
-					new CategoryProperty
-					{
-						CategoryPropertyName = "Size",
-						CategoryPropertyValues = new List<string>
-						{
-							"M",
-							"L",
-							"XL",
-							"XXL"
-						}
-					},
-					new CategoryProperty
-					{
-						CategoryPropertyName = "Color",
-						CategoryPropertyValues = new List<string>
-						{
-							"White",
-							"Black"
-						}
-					}
-				}
 			};
 
 			var tShirtCategory = new Category
@@ -70,57 +47,116 @@ namespace CoolShopping.Application
 			Categories.Add(tShirtCategory);
 			Categories.Add(dressShirtCategory);
 
-			var tShirt1 = new Product
+			var tShirt = new Product
 			{
 				ProductId = 1,
-				ProductName = "TShirt black xl",
+				ProductName = "TShirt polo special",
 				Category = tShirtCategory,
 				Supplier = supplier1,
-				BuyPrice = 6,
-				SellPrice = 12,
-				ProductAttributes = new List<string> { "Black", "XL" },
-				UnitsInStock = 0
-			};
-			var tShirt2 = new Product
-			{
-				ProductId = 2,
-				ProductName = "TShirt special white M",
-				Category = tShirtCategory,
-				Supplier = supplier1,
-				BuyPrice = 6,
-				SellPrice = 12,
-				ProductAttributes = new List<string> { "White", "M" },
-				UnitsInStock = 20
+				ProductVariants = new List<ProductVariant>
+				{
+					new ProductVariant
+					{
+						ProductVariantId = 1,
+						ProductAttributes = new List<ProductAttribute>
+						{
+							new ProductAttribute
+							{
+								ProductAttributeName = "Size",
+								ProductAttributeValue = "XL",
+							},
+							new ProductAttribute
+							{
+								ProductAttributeName = "Color",
+								ProductAttributeValue = "Black"
+							}
+						},
+						BuyPrice = 6,
+						SellPrice = 12,
+						UnitsInStock = 10
+					
+					},
+					new ProductVariant
+					{
+						ProductVariantId = 2,
+						ProductAttributes = new List<ProductAttribute>
+						{
+							new ProductAttribute
+							{
+								ProductAttributeName = "Size",
+								ProductAttributeValue = "M",
+							},
+							new ProductAttribute
+							{
+								ProductAttributeName = "Color",
+								ProductAttributeValue = "White"
+							}
+						},
+						BuyPrice = 6,
+						SellPrice = 12,
+						UnitsInStock = 20
+
+					}
+				}
 			};
 
-			var dress1 = new Product
+			var dress = new Product
 			{
 				ProductId = 3,
 				ProductName = "Yellow dress shirt with diamond",
 				Category = dressShirtCategory,
 				Supplier = supplier1,
-				BuyPrice = 8,
-				SellPrice = 20,
-				ProductAttributes = new List<string> { "Yellow", "M" },
-				UnitsInStock = 30
+
+				ProductVariants = new List<ProductVariant>
+				{
+					new ProductVariant
+					{
+						ProductVariantId = 3,
+						ProductAttributes = new List<ProductAttribute>
+						{
+							new ProductAttribute
+							{
+								ProductAttributeName = "Size",
+								ProductAttributeValue = "S",
+							},
+							new ProductAttribute
+							{
+								ProductAttributeName = "Color",
+								ProductAttributeValue = "Pink"
+							}
+						},
+						BuyPrice = 10,
+						SellPrice = 20,
+						UnitsInStock = 50
+
+					},
+					new ProductVariant
+					{
+						ProductVariantId = 4,
+						ProductAttributes = new List<ProductAttribute>
+						{
+							new ProductAttribute
+							{
+								ProductAttributeName = "Size",
+								ProductAttributeValue = "XS",
+							},
+							new ProductAttribute
+							{
+								ProductAttributeName = "Color",
+								ProductAttributeValue = "Yellow"
+							}
+						},
+						BuyPrice = 15,
+						SellPrice = 30,
+						UnitsInStock = 50
+
+					}
+				}
 			};
 
-			var dress2 = new Product
-			{
-				ProductId = 4,
-				ProductName = "Pink dress shirt with diamond",
-				Category = dressShirtCategory,
-				Supplier = supplier1,
-				BuyPrice = 8,
-				SellPrice = 20,
-				ProductAttributes = new List<string> { "Pink", "L" },
-				UnitsInStock = 40
-			};
 
-			Products.Add(tShirt1);
-			Products.Add(tShirt2);
-			Products.Add(dress1);
-			Products.Add(dress2);
+			Products.Add(tShirt);
+			Products.Add(dress);
 		}
 
 		public ICollection<Product> Products { get; } = new List<Product>();
@@ -138,10 +174,13 @@ namespace CoolShopping.Application
 					p.ProductName == orderLine.ProductName 
 					/*&& orderLine.ProductAttributes.SequenceEqual(p.ProductAttributes)*/);
 
+				var matchVariant =
+					matchProduct.ProductVariants.First(v => v.ProductVariantId == orderLine.ProductVariantId);
+
 				if (tradeMode == TradeMode.Buy)
 				{
 					matchProduct.UnitsInStock += orderLine.Quantity;
-					return matchProduct.BuyPrice * orderLine.Quantity * -1;
+					return matchVariant.BuyPrice * orderLine.Quantity * -1;
 				}
 				else
 				{
@@ -149,7 +188,7 @@ namespace CoolShopping.Application
 						throw new OutOfStockException();
 
 					matchProduct.UnitsInStock -= orderLine.Quantity;
-					return matchProduct.SellPrice * orderLine.Quantity;
+					return matchVariant.SellPrice * orderLine.Quantity;
 				}
 			}
 

@@ -13,7 +13,5 @@ namespace CoolShopping.Application.Entities
 		public int? ParentCategoryId { get; set; }
 		public Category ParentCategory { get; set; }
 
-		public IEnumerable<CategoryProperty> CategoryProperties = new List<CategoryProperty>();
-
 	}
 }

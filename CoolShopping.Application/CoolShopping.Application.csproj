@@ -47,6 +47,8 @@
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\OrderLine.cs" />
     <Compile Include="Entities\Product.cs" />
+    <Compile Include="Entities\ProductAttribute.cs" />
+    <Compile Include="Entities\ProductVariant.cs" />
     <Compile Include="Entities\Supplier.cs" />
     <Compile Include="Exceptions\IncorrectPriceException.cs" />
     <Compile Include="Exceptions\OutOfStockException.cs" />

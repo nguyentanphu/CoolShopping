@@ -21,10 +21,10 @@ namespace CoolShopping.Application.Entities
 
 		public int ProductId { get; set; }
 		public string ProductName { get; set; }
-		public IEnumerable<string> ProductAttributes { get; set; } = new List<string>();
-		public int UnitsInStock { get; set; } = 0;
-		public decimal BuyPrice { get; set; }
-		public decimal SellPrice { get; set; }
+		public IEnumerable<ProductVariant> ProductVariants = new List<ProductVariant>();
+		public int? UnitsInStock { get; set; } = 0;
+		public decimal? BuyPrice { get; set; }
+		public decimal? SellPrice { get; set; }
 
 		public Category Category { get; set; }
 
